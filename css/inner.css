@@ -83,9 +83,9 @@ url('../images/download\ \(2\).jpg') center/cover,#6c2d42}
 .leader-card{background:#fff;position:relative;overflow:hidden}
 .leader-photo{height:430px;background:center/cover;position:relative;background-color:#6e394c}
 .leader-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(30,8,17,.75))}
-.leader-pastor{background-image:url('../images/pastor.jpg')}
-.leader-one{background-image:url('../images/leader-1.jpg')}
-.leader-two{background-image:url('../images/leader-2.jpg')}
+.leader-pastor{background-image:url('../images/IMG_4245.JPG')}
+.leader-one{background-image:url('../images/BI7A0788.jpg')}
+.leader-two{background-image:url('../images/BI7A0840.jpg')}
 .leader-info{padding:22px 25px 27px}
 .leader-info h3{font-size:1.9rem}
 .leader-info p{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-top:5px}
