@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    match /users/{userId} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == userId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Public content: visitors can only read published content; admins can manage it.
+    // The public pages use the exact `published == true` field created by the admin forms.
+    match /announcements/{id} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /programs/{id} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /sermons/{id} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /gallery/{id} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /settings/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Prayer requests may be submitted without an account.
+    // Admins can read, update and delete them.
+    match /prayerRequests/{id} {
+      allow create: if
+        request.resource.data.keys().hasOnly(["name", "phone", "email", "request", "createdAt", "status"])
+        && request.resource.data.name is string
+        && request.resource.data.request is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.request.size() >= 1
+        && request.resource.data.request.size() <= 5000;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Testimonies start as pending. Public users may create, but may not
+    // approve or edit existing documents. Admins control approval.
+    match /testimonies/{id} {
+      allow create: if
+        request.resource.data.keys().hasOnly(["name", "testimony", "image", "approved", "createdAt"])
+        && request.resource.data.name is string
+        && request.resource.data.testimony is string
+        && request.resource.data.approved == false
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.testimony.size() >= 1
+        && request.resource.data.testimony.size() <= 5000;
+      allow read: if resource.data.approved == true || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+
+
+    // Public "Come Visit Us" form. Visitors can submit a request;
+    // only admins can read, update or delete submitted requests.
+    match /visitRequests/{id} {
+      allow create: if
+        request.resource.data.keys().hasOnly(["name", "phone", "email", "visitDate", "people", "reason", "message", "status", "createdAt"])
+        && request.resource.data.name is string
+        && request.resource.data.phone is string
+        && request.resource.data.email is string
+        && request.resource.data.visitDate is string
+        && request.resource.data.people is int
+        && request.resource.data.people >= 1
+        && request.resource.data.people <= 50
+        && request.resource.data.reason is string
+        && request.resource.data.message is string
+        && request.resource.data.status == "new"
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.phone.size() >= 1
+        && request.resource.data.message.size() <= 2000;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Member records are private to admins.
+    match /members/{id} {
+      allow read, create, update, delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Members | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css"></head><body>
+<div class="admin-shell"><aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a class="active" href="members.html">Members</a>
+<a href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
+<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Members</h1><p>Manage private church member records.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div><div class="two"><section class="card"><div class="section-title"><h2 id="formTitle">Add Member</h2><button class="btn secondary" id="clearBtn">Clear</button></div>
+<form id="form"><input type="hidden" id="editId"><div class="form-grid"><div class="field"><label>FULL NAME</label><input id="name" maxlength="120" required></div><div class="field"><label>PHONE</label><input id="phone" maxlength="40"></div><div class="field"><label>EMAIL</label><input id="email" type="email" maxlength="150"></div><div class="field"><label>MINISTRY</label><input id="ministry" maxlength="100"></div><div class="field full"><label>NOTES</label><textarea id="notes" maxlength="3000"></textarea></div></div><div class="actions"><button class="btn" id="saveBtn">Save Member</button></div></form></section>
+<section class="card"><div class="section-title"><h2>Privacy</h2></div><p style="color:#716a64;line-height:1.8;font-size:.84rem">Member records are private. Firestore rules allow only authorized admins to read or change this collection.</p></section></div>
+<section class="card" style="margin-top:20px"><div class="section-title"><h2>Members</h2><button class="btn secondary" id="refreshBtn">Refresh</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Ministry</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody></table></div></section></main></div>
+<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { db } from "../js/firebase-config.js";
+import { imageFileToBase64 } from "../js/image-helper.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+
+const $=id=>document.getElementById(id),form=$("form"),rows=$("rows"),notice=$("notice");
+function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+function reset(){form.reset();$("editId").value="";$("formTitle").textContent="Add Member";$("saveBtn").textContent="Save Member"}$("clearBtn").onclick=reset;$("refreshBtn").onclick=load;
+form.onsubmit=async e=>{e.preventDefault();$("saveBtn").disabled=true;try{let d={name:$("name").value.trim(),phone:$("phone").value.trim(),email:$("email").value.trim(),ministry:$("ministry").value.trim(),notes:$("notes").value.trim(),updatedAt:serverTimestamp()};if($("editId").value)await updateDoc(doc(db,"members",$("editId").value),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,"members"),d)}note("Member saved.");reset();load()}catch(e){console.error(e);note(e.message||"Could not save member.","error")}finally{$("saveBtn").disabled=false}};
+async function load(){rows.innerHTML='<tr><td colspan="5" class="empty">Loading...</td></tr>';try{let s=await getDocs(collection(db,"members"));let a=s.docs.map(d=>({id:d.id,...d.data()}));a.sort((x,y)=>(x.name||"").localeCompare(y.name||""));rows.innerHTML=a.length?a.map(x=>`<tr><td><strong>${esc(x.name||"")}</strong><br><small>${esc(x.notes||"")}</small></td><td>${esc(x.phone||"")}</td><td>${esc(x.email||"")}</td><td>${esc(x.ministry||"")}</td><td><button class="btn secondary" onclick="editMember('${x.id}')">Edit</button> <button class="btn danger" onclick="removeMember('${x.id}')">Delete</button></td></tr>`).join(""):'<tr><td colspan="5" class="empty">No members yet.</td></tr>'}catch(e){console.error(e);rows.innerHTML='<tr><td colspan="5" class="empty">Could not load members.</td></tr>'}}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+window.editMember=async id=>{let s=await getDoc(doc(db,"members",id)),x=s.data();$("editId").value=id;$("name").value=x.name||"";$("phone").value=x.phone||"";$("email").value=x.email||"";$("ministry").value=x.ministry||"";$("notes").value=x.notes||"";$("formTitle").textContent="Edit Member";$("saveBtn").textContent="Update Member";scrollTo({top:0,behavior:"smooth"})}
+window.removeMember=async id=>{if(confirm("Delete this member?")){await deleteDoc(doc(db,"members",id));note("Member deleted.");load()}};load();
+</script></body></html>

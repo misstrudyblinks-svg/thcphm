@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Call Prayer Ministry - House of Refuge. A place of prayer, hope, faith and fellowship.">
+    <title>The Call Prayer Ministry | House of Refuge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-mark">
+            <img src="images/logo.jpeg" alt="The Call Prayer Ministry logo">
+        </div>
+        <span>Preparing a place of refuge...</span>
+    </div>
+
+    <header class="site-header" id="siteHeader">
+        <div class="container nav-wrap">
+            <a href="#home" class="brand">
+                <img src="images/logo.jpeg" alt="The Call Prayer Ministry logo">
+                <div class="brand-text">
+                    <strong>THE CALL</strong>
+                    <span>PRAYER MINISTRY</span>
+                </div>
+            </a>
+
+            <nav class="desktop-nav" aria-label="Main navigation">
+                <a href="#home">Home</a>
+                <a href="about.html">About</a>
+                <a href="ministries.html">Ministries</a>
+                <a href="#sermon">Sermons</a>
+                <a href="#events">Events</a>
+                <a href="#give">Give</a>
+                <!-- <a href="#contact">Contact</a> -->
+            </nav>
+
+            <a href="#contact" class="nav-cta">Join Us</a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <aside class="drawer" id="drawer" aria-hidden="true">
+        <div class="drawer-top">
+            <img src="images/logo.jpeg" alt="Church logo">
+            <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        </div>
+
+        <nav class="drawer-nav">
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="ministries.html">Ministries</a>
+            <a href="#sermon">Sermons</a>
+            <a href="#events">Events</a>
+            <a href="#give">Give</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="drawer-footer">
+            <p>House of Refuge — "Just A Step"</p>
+            <a href="#contact" class="gold-btn">Plan a Visit</a>
+        </div>
+    </aside>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-overlay"></div>
+            <div class="hero-glow"></div>
+
+            <div class="container hero-content reveal">
+                <p class="eyebrow">WELCOME TO THE CALL PRAYER MINISTRY</p>
+                <h1>A Place of <span>Prayer.</span><br>A Place of <span>Refuge.</span></h1>
+                <p class="hero-copy">
+                    Come as you are. Find hope, experience God's presence,
+                    and take your next step in faith with us.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="about.html" class="gold-btn">Discover Our Ministry</a>
+                    <a href="#sermon" class="outline-btn">Watch a Sermon <span>↗</span></a>
+                </div>
+
+                <div class="hero-meta">
+                    <div><strong>Sunday</strong><span>Worship Service</span></div>
+                    <div><strong>Wednesday</strong><span>Prayer Meeting</span></div>
+                    <div><strong>Friday</strong><span>Night of Prayer</span></div>
+                </div>
+            </div>
+
+            <a href="#about" class="scroll-cue" aria-label="Scroll down">
+                <span>Scroll to explore</span>
+                <i></i>
+            </a>
+        </section>
+
+        <section class="public-announcements section-pad" id="publicAnnouncements" hidden>
+            <div class="container">
+                <div class="section-heading center reveal">
+                    <p class="eyebrow">STAY CONNECTED</p>
+                    <h2>Latest <em>Announcements</em></h2>
+                </div>
+                <div class="announcement-grid" id="announcementList"></div>
+            </div>
+        </section>
+
+        <section class="welcome section-pad" id="about">
+            <div class="container two-column">
+                <div class="section-image reveal-left">
+                    <div class="image-card about-bg"></div>
+                    <div class="image-badge">
+                        <strong>JUST A STEP</strong>
+                        <span>Closer to His presence</span>
+                    </div>
+                </div>
+
+                <div class="section-copy reveal">
+                    <p class="eyebrow">WELCOME HOME</p>
+                    <h2>There is always <em>room</em> for you here.</h2>
+                    <p id="publicWelcome">
+                        The Call Prayer Ministry is a community built around prayer,
+                        worship, God's Word and genuine fellowship. We believe that
+                        every person has a purpose and that every journey begins with
+                        a step of faith.
+                    </p>
+                    <p>
+                        Whether you are discovering faith, returning to church, or
+                        looking for a spiritual family, we invite you to make this
+                        house your place of refuge.
+                    </p>
+                    <a href="about.html" class="text-link">Learn more about us <span>→</span></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="service-strip">
+            <div class="container service-grid">
+                <div class="service-heading">
+                    <p class="eyebrow">JOIN US</p>
+                    <h2>Our Weekly Gatherings</h2>
+                </div>
+                <div class="service-item">
+                    <span class="service-icon">✦</span>
+                    <div><strong>Sunday Worship</strong><small id="serviceSunday">8:00 AM — 11:00 AM</small></div>
+                </div>
+                <div class="service-item">
+                    <span class="service-icon">✧</span>
+                    <div><strong>Wednesday Prayer</strong><small id="serviceWednesday">6:00 PM — 8:00 PM</small></div>
+                </div>
+                <div class="service-item">
+                    <span class="service-icon">✦</span>
+                    <div><strong>Friday Night Prayer</strong><small id="serviceFriday">7:00 PM — 9:00 PM</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ministries section-pad" id="ministries">
+            <div class="container">
+                <div class="section-heading center reveal">
+                    <p class="eyebrow">SERVING TOGETHER</p>
+                    <h2>Find Your Place in the <em>Family</em></h2>
+                    <p>There is a place for every generation and every gift.</p>
+                </div>
+
+                <div class="ministry-grid">
+                    <article class="ministry-card ministry-prayer reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>01</span><h3>Prayer Ministry</h3><p>Standing together in prayer, intercession and faith.</p><a href="prayer-ministry.html">Explore →</a></div>
+                    </article>
+                    <article class="ministry-card ministry-youth reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>02</span><h3>Youth Ministry</h3><p>Helping young people discover identity, purpose and faith.</p><a href="youth-ministry.html">Explore →</a></div>
+                    </article>
+                    <article class="ministry-card ministry-women reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>03</span><h3>Women's Ministry</h3><p>Building women through fellowship, prayer and the Word.</p><a href="women-ministry.html">Explore →</a></div>
+                    </article>
+                    <article class="ministry-card ministry-men reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>04</span><h3>Men's Ministry</h3><p>Equipping men to lead with faith, courage and integrity.</p><a href="men-ministry.html">Explore →</a></div>
+                    </article>
+                    <article class="ministry-card ministry-children reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>05</span><h3>Children's Ministry</h3><p>Creating a safe and joyful foundation for young hearts.</p><a href="children-ministry.html">Explore →</a></div>
+                    </article>
+                    <article class="ministry-card ministry-outreach reveal">
+                        <div class="card-overlay"></div>
+                        <div class="card-content"><span>06</span><h3>Evangelism & Outreach</h3><p>Taking the love and hope of Christ beyond our walls.</p><a href="outreach-ministry.html">Explore →</a></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="scripture">
+            <div class="scripture-overlay"></div>
+            <div class="container scripture-content reveal">
+                <span class="quote-mark">“</span>
+                <p class="eyebrow">TODAY'S ENCOURAGEMENT</p>
+                <blockquote>“Those who hope in the Lord will renew their strength.”</blockquote>
+                <cite>Isaiah 40:31</cite>
+            </div>
+        </section>
+
+        <section class="sermon section-pad" id="sermon">
+            <div class="container">
+                <div class="section-heading split reveal">
+                    <div>
+                        <p class="eyebrow">WATCH & LISTEN</p>
+                        <h2>Messages that <em>strengthen</em> your faith.</h2>
+                    </div>
+                    <a href="#contact" class="text-link">View all sermons →</a>
+                </div>
+
+                <div class="public-sermon-grid" id="publicSermonGrid" hidden></div>
+
+                <div class="sermon-feature reveal" id="staticSermonFeature">
+                    <div class="sermon-image">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="sermon-info">
+                        <p class="eyebrow">LATEST MESSAGE</p>
+                        <h3>Take Your Next Step</h3>
+                        <p>Discover how faith, prayer and obedience can move you into the next chapter God has prepared for you.</p>
+                        <div class="sermon-details"><span>Sunday Service</span><span>•</span><span>45 min</span></div>
+                        <a href="#contact" class="gold-btn">Watch Message</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="events section-pad" id="events">
+            <div class="container">
+                <div class="section-heading center reveal">
+                    <p class="eyebrow">WHAT'S HAPPENING</p>
+                    <h2>Upcoming <em>Events</em></h2>
+                </div>
+
+<div class="event-grid" id="publicEventGrid"></div>
+            </div>
+        </section>
+
+        <section class="public-gallery section-pad" id="publicGallery" hidden>
+            <div class="container">
+                <div class="section-heading center reveal">
+                    <p class="eyebrow">OUR LIFE TOGETHER</p>
+                    <h2>Church <em>Gallery</em></h2>
+                </div>
+                <div class="public-gallery-grid" id="publicGalleryGrid"></div>
+            </div>
+        </section>
+
+        <section class="public-testimonies section-pad" id="publicTestimonies" hidden>
+            <div class="container">
+                <div class="section-heading split reveal">
+                    <div>
+                        <p class="eyebrow">WHAT GOD IS DOING</p>
+                        <h2>Stories of <em>Grace</em></h2>
+                    </div>
+                    <a href="#testimony-form" class="text-link">Share your testimony →</a>
+                </div>
+                <div class="public-testimony-grid" id="publicTestimonyGrid"></div>
+            </div>
+        </section>
+
+        <section class="response-forms section-pad" id="prayer-form">
+            <div class="container forms-grid">
+                <div class="form-panel reveal">
+                    <p class="eyebrow">PRAYER REQUEST</p>
+                    <h2>Let us stand with <em>you.</em></h2>
+                    <p class="form-intro">Share what is on your heart. Your request goes directly to our prayer team for follow-up.</p>
+                    <div id="prayerNotice" class="notice hidden"></div>
+                    <form id="prayerForm" class="public-form">
+                        <div class="public-form-grid">
+                            <div><label for="prayerName">FULL NAME</label><input id="prayerName" required maxlength="120" placeholder="Your name"></div>
+                            <div><label for="prayerPhone">PHONE</label><input id="prayerPhone" maxlength="40" placeholder="+233..."></div>
+                            <div><label for="prayerEmail">EMAIL</label><input id="prayerEmail" type="email" maxlength="150" placeholder="you@example.com"></div>
+                            <div class="full"><label for="prayerRequest">YOUR PRAYER REQUEST</label><textarea id="prayerRequest" required maxlength="5000" placeholder="Tell us how we can pray with you..."></textarea></div>
+                        </div>
+                        <button class="gold-btn" type="submit" id="prayerSubmit">Send Prayer Request →</button>
+                    </form>
+                </div>
+
+                <div class="form-panel reveal-right" id="testimony-form">
+                    <p class="eyebrow">SHARE YOUR TESTIMONY</p>
+                    <h2>Tell your story of <em>grace.</em></h2>
+                    <p class="form-intro">Your testimony will be reviewed by an administrator before it appears publicly. You may include your photo.</p>
+                    <div id="testimonyNotice" class="notice hidden"></div>
+                    <form id="testimonyForm" class="public-form">
+                        <div class="public-form-grid">
+                            <div class="full"><label for="testimonyName">YOUR NAME</label><input id="testimonyName" required maxlength="120" placeholder="Your name"></div>
+                            <div class="full"><label for="testimonyText">YOUR TESTIMONY</label><textarea id="testimonyText" required maxlength="5000" placeholder="Share what God has done..."></textarea></div>
+                            <div class="full"><label for="testimonyImage">YOUR PHOTO (OPTIONAL)</label><input id="testimonyImage" type="file" accept="image/*"><small class="file-help">Images are compressed before being saved securely in Firestore.</small></div>
+                        </div>
+                        <button class="gold-btn" type="submit" id="testimonySubmit">Submit Testimony →</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="prayer-cta">
+            <div class="prayer-bg"></div>
+            <div class="container prayer-content reveal">
+                <p class="eyebrow">WE WANT TO STAND WITH YOU</p>
+                <h2>Whatever you are facing,<br><em>you don't have to face it alone.</em></h2>
+                <p>Send us your prayer request. Our prayer team is ready to stand with you in faith.</p>
+                <a href="#prayer-form" class="gold-btn">Send a Prayer Request</a>
+            </div>
+        </section>
+
+        <section class="give section-pad" id="give">
+            <div class="container two-column give-grid">
+                <div class="section-copy reveal">
+                    <p class="eyebrow">GIVE WITH PURPOSE</p>
+                    <h2>Your generosity helps us <em>serve.</em></h2>
+                    <p>
+                        Your giving supports ministry, outreach, prayer gatherings,
+                        community care and the work of creating a place of refuge for others.
+                    </p>
+                    <button type="button" class="gold-btn" id="giveTodayBtn">Give Today</button>
+                </div>
+                <div class="give-card reveal-right">
+                    <span class="give-symbol">✦</span>
+                    <h3>Give. Serve. Impact.</h3>
+                    <p>“God loves a cheerful giver.”</p>
+                    <small>2 Corinthians 9:7</small>
+                </div>
+            </div>
+        </section>
+
+        <div class="giving-modal" id="givingModal" aria-hidden="true">
+            <div class="giving-modal-backdrop" data-close-giving></div>
+            <div class="giving-modal-card" role="dialog" aria-modal="true" aria-labelledby="givingTitle">
+                <button type="button" class="giving-close" id="givingClose" aria-label="Close giving details">&times;</button>
+                <p class="eyebrow">GIVE WITH PURPOSE</p>
+                <h2 id="givingTitle">Give With Purpose</h2>
+                <p class="giving-modal-intro" id="givingNote">Thank you for supporting the work of The Call Prayer Ministry.</p>
+                <div class="giving-methods">
+                    <div class="giving-method"><span>▣</span><div><strong>Mobile Money / Giving</strong><p id="givingMobileMoney">Giving details coming soon.</p></div></div>
+                    <div class="giving-method"><span>▤</span><div><strong>Bank Transfer</strong><p>Bank: <b id="givingBankName">—</b><br>Account Name: <b id="givingAccountName">—</b><br>Account Number: <b id="givingAccountNumber">—</b></p></div></div>
+                </div>
+                <p class="giving-note">Please use the details above when making your gift. Contact the ministry if you need assistance.</p>
+            </div>
+        </div>
+
+        <section class="contact section-pad" id="contact">
+            <div class="container contact-box reveal">
+                <div>
+                    <p class="eyebrow">COME VISIT US</p>
+                    <h2>Let's take the <em>next step</em> together.</h2>
+                    <p>Planning to visit The Call? Send us your details and a member of the ministry team can follow up with you.</p>
+                </div>
+
+                <div id="visitNotice" class="notice hidden" style="grid-column:1/-1"></div>
+
+                <form id="visitForm" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+                    <div>
+                        <label for="visitName" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">FULL NAME</label>
+                        <input id="visitName" name="name" required maxlength="120" placeholder="Your name" style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                    </div>
+                    <div>
+                        <label for="visitPhone" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">PHONE</label>
+                        <input id="visitPhone" name="phone" required maxlength="40" placeholder="+233..." style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                    </div>
+                    <div>
+                        <label for="visitEmail" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">EMAIL</label>
+                        <input id="visitEmail" name="email" type="email" maxlength="150" placeholder="you@example.com" style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                    </div>
+                    <div>
+                        <label for="visitDate" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">PLANNED VISIT DATE</label>
+                        <input id="visitDate" name="visitDate" type="date" style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                    </div>
+                    <div>
+                        <label for="visitPeople" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">NUMBER OF PEOPLE</label>
+                        <input id="visitPeople" name="people" type="number" min="1" max="50" step="1" value="1" style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                    </div>
+                    <div>
+                        <label for="visitReason" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">HOW CAN WE HELP?</label>
+                        <select id="visitReason" name="reason" style="width:100%;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8">
+                            <option value="First visit">First visit</option>
+                            <option value="Prayer">Prayer</option>
+                            <option value="Counselling">Counselling</option>
+                            <option value="General enquiry">General enquiry</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1">
+                        <label for="visitMessage" style="display:block;font-size:.68rem;letter-spacing:.08em;font-weight:700;margin-bottom:7px">MESSAGE</label>
+                        <textarea id="visitMessage" name="message" maxlength="2000" placeholder="Tell us anything you would like us to know..." style="width:100%;min-height:120px;padding:13px;border:1px solid rgba(212,167,44,.35);border-radius:8px;background:#fffdf8;resize:vertical"></textarea>
+                    </div>
+                    <div style="grid-column:1/-1">
+                        <button class="gold-btn" type="submit" id="visitSubmit">Send Visit Request →</button>
+                    </div>
+                </form>
+
+                <div class="contact-details" style="grid-column:1/-1">
+                    <div><span>PHONE</span><strong id="publicPhone">+233 XX XXX XXXX</strong></div>
+                    <div><span>EMAIL</span><strong id="publicEmail">info@thecallministry.org</strong></div>
+                    <div><span>LOCATION</span><strong id="publicAddress">Ghana · House of Refuge</strong></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <img src="images/logo.jpeg" alt="The Call Prayer Ministry logo">
+                <h3>The Call Prayer Ministry</h3>
+                <p>House of Refuge — “Just A Step”</p>
+            </div>
+            <div>
+                <h4>Explore</h4>
+                <a href="about.html">About</a><a href="ministries.html">Ministries</a><a href="#sermon">Sermons</a><a href="#events">Events</a>
+            </div>
+            <div>
+                <h4>Connect</h4>
+                <a href="#contact">Contact</a><a href="#give">Give</a><a href="#contact">Prayer Request</a>
+            </div>
+            <div>
+                <h4>Follow Us</h4>
+                <div class="socials"><a id="publicFacebook" href="#" target="_blank" rel="noopener">f</a><a id="publicInstagram" href="#" target="_blank" rel="noopener">◎</a><a id="publicYoutube" href="#" target="_blank" rel="noopener">▶</a></div>
+            </div>
+        </div>
+        <div class="container copyright">
+            <span>© 2026 The Call Prayer Ministry. All rights reserved.</span>
+            <span>Built with faith & purpose.</span><a href="admin/login.html" style="color:inherit;opacity:.45;font-size:.7rem">Admin</a>
+        </div>
+    </footer>
+
+    <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+    <script src="js/script.js"></script>
+    <script>
+        const giveBtn = document.getElementById("giveTodayBtn");
+        const givingModal = document.getElementById("givingModal");
+        const givingClose = document.getElementById("givingClose");
+        function openGiving(){ givingModal.classList.add("open"); givingModal.setAttribute("aria-hidden","false"); document.body.classList.add("modal-open"); }
+        function closeGiving(){ givingModal.classList.remove("open"); givingModal.setAttribute("aria-hidden","true"); document.body.classList.remove("modal-open"); }
+        giveBtn?.addEventListener("click", openGiving);
+        givingClose?.addEventListener("click", closeGiving);
+        givingModal?.addEventListener("click", e => { if(e.target.dataset.closeGiving !== undefined) closeGiving(); });
+        document.addEventListener("keydown", e => { if(e.key === "Escape") closeGiving(); });
+    </script>
+    <script type="module" src="js/public-firestore.js"></script>
+</body>
+</html>

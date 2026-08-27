@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sermons | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css"></head><body>
+<div class="admin-shell"><aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a class="active" href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a href="members.html">Members</a>
+<a href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
+<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Sermons</h1><p>Manage sermons, speakers and watch links.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div><div class="two"><section class="card"><div class="section-title"><h2 id="formTitle">Add Sermon</h2><button class="btn secondary" id="clearBtn">Clear</button></div>
+<form id="form"><input type="hidden" id="editId"><div class="form-grid"><div class="field full"><label>TITLE</label><input id="title" maxlength="150" required></div>
+<div class="field"><label>SPEAKER</label><input id="speaker" maxlength="120"></div><div class="field"><label>DATE</label><input id="date" type="date"></div>
+<div class="field full"><label>VIDEO / AUDIO LINK</label><input id="mediaUrl" type="url" placeholder="https://..."></div>
+<div class="field"><label>STATUS</label><select id="published"><option value="true">Published</option><option value="false">Draft</option></select></div>
+<div class="field"><label>THUMBNAIL</label><input id="image" type="file" accept="image/*"></div>
+<div class="field full"><label>DESCRIPTION</label><textarea id="description" maxlength="5000"></textarea></div></div>
+<div class="actions"><button class="btn" type="submit" id="saveBtn">Save Sermon</button></div></form></section>
+<section class="card"><div class="section-title"><h2>Media</h2></div><p style="color:#716a64;line-height:1.8;font-size:.84rem">Store a YouTube, Facebook, audio or other public media URL. Thumbnail images are compressed into Firestore Base64.</p></section></div>
+<section class="card" style="margin-top:20px"><div class="section-title"><h2>Saved Sermons</h2><button class="btn secondary" id="refreshBtn">Refresh</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Image</th><th>Sermon</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody></table></div></section></main></div>
+<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { db } from "../js/firebase-config.js";
+import { imageFileToBase64 } from "../js/image-helper.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+
+const $=id=>document.getElementById(id),form=$("form"),rows=$("rows"),notice=$("notice");
+function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+function reset(){form.reset();$("editId").value="";$("formTitle").textContent="Add Sermon";$("saveBtn").textContent="Save Sermon"}$("clearBtn").onclick=reset;$("refreshBtn").onclick=load;
+form.onsubmit=async e=>{e.preventDefault();$("saveBtn").disabled=true;try{let image=null;if($("image").files[0])image=await imageFileToBase64($("image").files[0]);let d={title:$("title").value.trim(),speaker:$("speaker").value.trim(),date:$("date").value,mediaUrl:$("mediaUrl").value.trim(),description:$("description").value.trim(),published:$("published").value==="true",updatedAt:serverTimestamp()};if(image)d.image=image;if($("editId").value)await updateDoc(doc(db,"sermons",$("editId").value),d);else{d.createdAt=serverTimestamp();await addDoc(collection(db,"sermons"),d)}note("Sermon saved successfully.");reset();load()}catch(e){console.error(e);note(e.message||"Could not save sermon.","error")}finally{$("saveBtn").disabled=false}};
+async function load(){rows.innerHTML='<tr><td colspan="5" class="empty">Loading...</td></tr>';try{const s=await getDocs(collection(db,"sermons"));let a=s.docs.map(d=>({id:d.id,...d.data()}));a.sort((x,y)=>(y.date||"").localeCompare(x.date||""));rows.innerHTML=a.length?a.map(x=>`<tr><td>${x.image?`<img src="${x.image}" alt="">`:"—"}</td><td><strong>${esc(x.title||"Untitled")}</strong><br><small>${esc(x.speaker||"")}</small></td><td>${esc(x.date||"—")}</td><td>${x.published?"Published":"Draft"}</td><td><button class="btn secondary" onclick="editSermon('${x.id}')">Edit</button> <button class="btn danger" onclick="removeSermon('${x.id}')">Delete</button></td></tr>`).join(""):'<tr><td colspan="5" class="empty">No sermons yet.</td></tr>'}catch(e){console.error(e);rows.innerHTML='<tr><td colspan="5" class="empty">Could not load sermons.</td></tr>'}}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+window.editSermon=async id=>{let s=await getDoc(doc(db,"sermons",id)),x=s.data();$("editId").value=id;$("title").value=x.title||"";$("speaker").value=x.speaker||"";$("date").value=x.date||"";$("mediaUrl").value=x.mediaUrl||"";$("description").value=x.description||"";$("published").value=String(x.published!==false);$("formTitle").textContent="Edit Sermon";$("saveBtn").textContent="Update Sermon";scrollTo({top:0,behavior:"smooth"})}
+window.removeSermon=async id=>{if(confirm("Delete this sermon?")){await deleteDoc(doc(db,"sermons",id));note("Sermon deleted.");load()}};load();
+</script></body></html>

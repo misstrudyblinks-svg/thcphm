@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Prayer Requests | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css"></head><body>
+<div class="admin-shell"><aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a class="active" href="prayer-requests.html">Prayer Requests</a>
+<a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a href="members.html">Members</a>
+<a href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
+<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Prayer Requests</h1><p>Review prayer requests submitted by visitors.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div><section class="card"><div class="section-title"><h2>Incoming Requests</h2><button class="btn secondary" id="refreshBtn">Refresh</button></div>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Contact</th><th>Prayer Request</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody></table></div></section></main></div>
+<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { db } from "../js/firebase-config.js";
+import { imageFileToBase64 } from "../js/image-helper.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+
+const $=id=>document.getElementById(id),rows=$("rows"),notice=$("notice");
+function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+$("refreshBtn").onclick=load;
+async function load(){rows.innerHTML='<tr><td colspan="6" class="empty">Loading...</td></tr>';try{let s=await getDocs(collection(db,"prayerRequests"));let a=s.docs.map(d=>({id:d.id,...d.data()}));a.sort((x,y)=>(y.createdAt?.seconds||0)-(x.createdAt?.seconds||0));rows.innerHTML=a.length?a.map(x=>`<tr><td><strong>${esc(x.name||"Anonymous")}</strong></td><td>${esc(x.phone||"")}<br>${esc(x.email||"")}</td><td style="min-width:260px;white-space:pre-wrap">${esc(x.request||"")}</td><td>${fmt(x.createdAt)}</td><td>${esc(x.status||"new")}</td><td><button class="btn" onclick="markPrayer('${x.id}','prayed')">Prayed</button> <button class="btn secondary" onclick="markPrayer('${x.id}','read')">Read</button> <button class="btn danger" onclick="removePrayer('${x.id}')">Delete</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No prayer requests yet.</td></tr>'}catch(e){console.error(e);rows.innerHTML='<tr><td colspan="6" class="empty">Could not load requests.</td></tr>'}}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}function fmt(t){return t?.toDate?t.toDate().toLocaleString():"—"}
+window.markPrayer=async(id,status)=>{await updateDoc(doc(db,"prayerRequests",id),{status,updatedAt:serverTimestamp()});note("Prayer request updated.");load()}
+window.removePrayer=async id=>{if(confirm("Delete this prayer request?")){await deleteDoc(doc(db,"prayerRequests",id));note("Prayer request deleted.");load()}};load();
+</script></body></html>

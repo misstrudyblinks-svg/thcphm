@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt=""><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a class="active" href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a href="members.html">Members</a>
+<a href="settings.html">Church Settings</a>
+</nav>
+<div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div>
+</aside>
+<main class="main">
+<div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Dashboard</h1><p>Welcome to the church administration portal.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<section class="grid">
+<div class="card stat"><strong id="announcementCount">—</strong><span>Announcements</span></div>
+<div class="card stat"><strong id="programCount">—</strong><span>Programs</span></div>
+<div class="card stat"><strong id="prayerCount">—</strong><span>Prayer Requests</span></div>
+<div class="card stat"><strong id="testimonyCount">—</strong><span>Pending Testimonies</span></div><div class="card stat"><strong id="visitCount">—</strong><span>Visit Requests</span></div>
+</section>
+<section class="two">
+<div class="card"><div class="section-title"><h2>Admin Foundation</h2></div>
+<p style="color:#716a64;font-size:.84rem;line-height:1.8">Firebase Authentication and Firestore are connected. The dashboard will read live data from your <strong>thcphm</strong> project. Images will be compressed into Base64 before being stored in Firestore; Firebase Storage is not used.</p>
+<div class="actions"><a class="btn" href="announcements.html">Manage Announcements</a><a class="btn secondary" href="../index.html">Open Public Site</a></div></div>
+<div class="card"><div class="section-title"><h2>Next Modules</h2></div>
+<ul style="padding-left:20px;color:#716a64;font-size:.82rem;line-height:2"><li>Programs / Events</li><li>Sermons</li><li>Gallery</li><li>Prayer Requests</li><li>Testimonies approval</li><li>Members</li><li>Church Settings</li></ul></div>
+</section>
+</main></div>
+<script type="module">
+import { db } from "../js/firebase-config.js";
+import { collection, getCountFromServer, query, where } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+
+async function count(path, el, q=null){
+ try{const ref=q?query(collection(db,path),q):collection(db,path); const snap=await getCountFromServer(ref); document.getElementById(el).textContent=snap.data().count;}
+ catch(e){console.warn("Count failed",path,e);document.getElementById(el).textContent="0";}
+}
+document.addEventListener("tcpAdminReady",()=>{
+ count("announcements","announcementCount");
+ count("programs","programCount");
+ count("prayerRequests","prayerCount");
+ count("testimonies","testimonyCount",where("approved","==",false));
+ count("visitRequests","visitCount");
+});
+</script>
+</body></html>

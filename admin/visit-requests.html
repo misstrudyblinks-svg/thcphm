@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Visit Requests | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css"></head><body>
+<div class="admin-shell"><aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a href="members.html">Members</a>
+<a href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
+<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Visit Requests</h1><p>People who used the “Come Visit Us” form.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div><section class="card visit-requests-card"><div class="section-title"><div><h2>Incoming Visit Requests</h2><p>Each submission is shown as a readable card so contact details and messages are easy to review.</p></div><button class="btn secondary" id="refreshBtn">Refresh</button></div>
+<div class="visit-requests-grid" id="rows"><div class="empty">Loading...</div></div></section></main></div>
+<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { db } from "../js/firebase-config.js";
+import { collection, updateDoc, deleteDoc, doc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+const $=id=>document.getElementById(id), rows=$("rows"), notice=$("notice");
+function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+$("refreshBtn").onclick=load;
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function fmt(t){return t?.toDate?t.toDate().toLocaleString():"—"}
+async function load(){rows.innerHTML='<div class="empty">Loading visit requests...</div>';try{let s=await getDocs(collection(db,"visitRequests"));let a=s.docs.map(d=>({id:d.id,...d.data()}));a.sort((x,y)=>(y.createdAt?.seconds||0)-(x.createdAt?.seconds||0));rows.innerHTML=a.length?a.map(x=>`<article class="visit-request-card ${x.status==='new'?'is-new':''}">
+<div class="visit-request-head"><div><h3>${esc(x.name||"Visitor")}</h3><small>Received ${esc(fmt(x.createdAt))}</small></div><span class="visit-status ${esc(x.status||'new')}">${esc(x.status||"new")}</span></div>
+<div class="visit-request-details"><div class="visit-detail"><span>Phone</span><strong>${esc(x.phone||"Not provided")}</strong></div><div class="visit-detail"><span>Email</span><strong>${esc(x.email||"Not provided")}</strong></div><div class="visit-detail"><span>Planned visit</span><strong>${esc(x.visitDate||"Any date")} · ${esc(String(x.people||1))} person(s)</strong></div><div class="visit-detail"><span>Reason</span><strong>${esc(x.reason||"General enquiry")}</strong></div></div>
+<div class="visit-message"><strong>Message</strong>${esc(x.message||"No message provided.")}</div>
+<div class="visit-actions"><button class="btn" onclick="markVisit('${x.id}','contacted')">Mark Contacted</button><button class="btn secondary" onclick="markVisit('${x.id}','completed')">Mark Completed</button><button class="btn danger" onclick="removeVisit('${x.id}')">Delete</button></div></article>`).join(""):'<div class="empty">No visit requests yet.</div>'}catch(e){console.error(e);rows.innerHTML='<div class="empty">Could not load visit requests. Check Firestore rules and connection.</div>'}}
+window.markVisit=async(id,status)=>{try{await updateDoc(doc(db,"visitRequests",id),{status,updatedAt:serverTimestamp()});note("Visit request updated.");load()}catch(e){note(e.message||"Could not update request.","error")}}
+window.removeVisit=async id=>{if(!confirm("Delete this visit request?"))return;try{await deleteDoc(doc(db,"visitRequests",id));note("Visit request deleted.");load()}catch(e){note(e.message||"Could not delete request.","error")}};
+load();
+</script></body></html>

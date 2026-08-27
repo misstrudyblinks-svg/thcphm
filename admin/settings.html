@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Church Settings | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css"></head><body>
+<div class="admin-shell"><aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a>
+<a href="announcements.html">Announcements</a>
+<a href="programs.html">Programs / Events</a>
+<a href="sermons.html">Sermons</a>
+<a href="gallery.html">Gallery</a>
+<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
+<a href="testimonies.html">Testimonies</a>
+<a href="members.html">Members</a>
+<a class="active" href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
+<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Church Settings</h1><p>Manage the public church information.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div><section class="card"><div class="section-title"><h2>Public Church Information</h2><button class="btn secondary" id="reloadBtn">Reload</button></div>
+<form id="form"><div class="form-grid"><div class="field full"><label>CHURCH NAME</label><input id="churchName" maxlength="150"></div><div class="field"><label>PHONE</label><input id="phone" maxlength="50"></div><div class="field"><label>EMAIL</label><input id="email" type="email" maxlength="150"></div><div class="field full"><label>ADDRESS / LOCATION</label><input id="address" maxlength="250"></div><div class="field"><label>SUNDAY SERVICE</label><input id="sunday" maxlength="120"></div><div class="field"><label>WEDNESDAY PRAYER</label><input id="wednesday" maxlength="120"></div><div class="field"><label>FRIDAY PRAYER</label><input id="friday" maxlength="120"></div><div class="field"><label>FACEBOOK URL</label><input id="facebook" type="url"></div><div class="field"><label>INSTAGRAM URL</label><input id="instagram" type="url"></div><div class="field"><label>YOUTUBE URL</label><input id="youtube" type="url"></div><div class="field full"><label>WELCOME MESSAGE</label><textarea id="welcome" maxlength="3000"></textarea></div><div class="field full"><label>GIVING TITLE</label><input id="givingTitle" maxlength="150" placeholder="Give With Purpose"></div><div class="field full"><label>MOBILE MONEY / GIVING DETAILS</label><input id="mobileMoney" maxlength="250" placeholder="e.g. MTN MoMo: 024 XXX XXXX — The Call Prayer Ministry"></div><div class="field"><label>BANK NAME</label><input id="bankName" maxlength="150"></div><div class="field"><label>ACCOUNT NAME</label><input id="accountName" maxlength="150"></div><div class="field"><label>ACCOUNT NUMBER</label><input id="accountNumber" maxlength="80"></div><div class="field full"><label>GIVING NOTE</label><textarea id="givingNote" maxlength="500"></textarea></div></div><div class="actions"><button class="btn" id="saveBtn">Save Church Settings</button></div></form></section></main></div>
+<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { db } from "../js/firebase-config.js";
+import { imageFileToBase64 } from "../js/image-helper.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+requireAdmin();
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+
+const $=id=>document.getElementById(id),form=$("form"),notice=$("notice");
+const fields=["churchName","phone","email","address","sunday","wednesday","friday","facebook","instagram","youtube","welcome","givingTitle","mobileMoney","bankName","accountName","accountNumber","givingNote"];
+function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+async function load(){try{const s=await getDoc(doc(db,"settings","church"));if(s.exists()){const x=s.data();fields.forEach(k=>$(k).value=x[k]||"")}}catch(e){console.error(e);note("Could not load settings.","error")}}
+form.onsubmit=async e=>{e.preventDefault();$("saveBtn").disabled=true;try{let d={};fields.forEach(k=>d[k]=$(k).value.trim());d.updatedAt=serverTimestamp();await setDoc(doc(db,"settings","church"),d,{merge:true});note("Church settings saved successfully.")}catch(e){console.error(e);note(e.message||"Could not save settings.","error")}finally{$("saveBtn").disabled=false}};$("reloadBtn").onclick=load;load();
+</script></body></html>

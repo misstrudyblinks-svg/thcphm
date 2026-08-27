@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Announcements | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><img src="../images/logo.jpeg" alt=""><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
+<nav class="sidebar-nav">
+<a href="dashboard.html">Dashboard</a><a class="active" href="announcements.html">Announcements</a><a href="programs.html">Programs / Events</a><a href="sermons.html">Sermons</a><a href="gallery.html">Gallery</a><a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a><a href="testimonies.html">Testimonies</a><a href="members.html">Members</a><a href="settings.html">Church Settings</a>
+</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div>
+</aside>
+<main class="main">
+<div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Announcements</h1><p>Create announcements that will later appear on the public website.</p></div><a class="btn" href="../index.html">View Website</a></div>
+<div id="notice" class="notice hidden"></div>
+<div class="two">
+<section class="card">
+<div class="section-title"><h2 id="formTitle">Add Announcement</h2><button class="btn secondary" id="resetBtn">Clear</button></div>
+<form id="announcementForm">
+<input type="hidden" id="editId">
+<div class="form-grid">
+<div class="field full"><label for="title">TITLE</label><input id="title" maxlength="150" required></div>
+<div class="field full"><label for="message">MESSAGE</label><textarea id="message" maxlength="5000" required></textarea></div>
+<div class="field"><label for="published">STATUS</label><select id="published"><option value="true">Published</option><option value="false">Draft</option></select></div>
+<div class="field"><label for="image">OPTIONAL IMAGE</label><input id="image" type="file" accept="image/*"></div>
+</div>
+<div id="previewWrap" class="hidden" style="margin-top:12px"><img id="preview" alt="Preview" style="max-width:180px;max-height:120px;border-radius:9px;object-fit:cover"></div>
+<div class="actions"><button class="btn" id="saveBtn" type="submit">Save Announcement</button></div>
+</form>
+</section>
+<section class="card">
+<div class="section-title"><h2>How this works</h2></div>
+<p style="color:#716a64;font-size:.82rem;line-height:1.8">Announcements are saved to the <strong>announcements</strong> Firestore collection. Optional images are resized and compressed in the browser and stored directly in the document as Base64. No Firebase Storage upload is performed.</p>
+</section>
+</div>
+<section class="card" style="margin-top:20px">
+<div class="section-title"><h2>Saved Announcements</h2><button class="btn secondary" id="refreshBtn">Refresh</button></div>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Image</th><th>Announcement</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody></table></div>
+</section>
+</main></div>
+<script type="module">
+import { db } from "../js/firebase-config.js";
+import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
+import { imageFileToBase64 } from "../js/image-helper.js";
+import {
+ collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+requireAdmin();
+const form=document.getElementById("announcementForm"), rows=document.getElementById("rows"), notice=document.getElementById("notice");
+const title=document.getElementById("title"), message=document.getElementById("message"), published=document.getElementById("published");
+const image=document.getElementById("image"), editId=document.getElementById("editId"), preview=document.getElementById("preview"), previewWrap=document.getElementById("previewWrap");
+const saveBtn=document.getElementById("saveBtn"), formTitle=document.getElementById("formTitle");
+
+document.getElementById("logoutBtn").onclick=logoutAdmin;
+document.getElementById("mobileMenu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+document.getElementById("refreshBtn").onclick=loadAnnouncements;
+document.getElementById("resetBtn").onclick=resetForm;
+
+function showNotice(text,type="success"){notice.textContent=text;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
+function resetForm(){form.reset();editId.value="";formTitle.textContent="Add Announcement";saveBtn.textContent="Save Announcement";previewWrap.classList.add("hidden");preview.removeAttribute("src")}
+image.addEventListener("change",()=>{const f=image.files[0];if(!f)return;preview.src=URL.createObjectURL(f);previewWrap.classList.remove("hidden")});
+
+form.addEventListener("submit",async(e)=>{
+ e.preventDefault(); saveBtn.disabled=true; saveBtn.textContent="Saving...";
+ try{
+   let imageData=null;
+   if(image.files[0]) imageData=await imageFileToBase64(image.files[0]);
+   const data={title:title.value.trim(),message:message.value.trim(),published:published.value==="true",updatedAt:serverTimestamp()};
+   if(imageData) data.image=imageData;
+   if(editId.value){
+      await updateDoc(doc(db,"announcements",editId.value),data);
+      showNotice("Announcement updated.");
+   }else{
+      data.createdAt=serverTimestamp();
+      await addDoc(collection(db,"announcements"),data);
+      showNotice("Announcement saved to Firestore.");
+   }
+   resetForm(); await loadAnnouncements();
+ }catch(err){console.error(err);showNotice(err.message||"Could not save announcement.","error")}
+ finally{saveBtn.disabled=false;saveBtn.textContent=editId.value?"Update Announcement":"Save Announcement";}
+});
+
+async function loadAnnouncements(){
+ rows.innerHTML='<tr><td colspan="5" class="empty">Loading...</td></tr>';
+ try{
+  const snap=await getDocs(query(collection(db,"announcements"),orderBy("createdAt","desc")));
+  if(snap.empty){rows.innerHTML='<tr><td colspan="5" class="empty">No announcements yet.</td></tr>';return;}
+  rows.innerHTML="";
+  snap.forEach(item=>{
+    const d=item.data(), tr=document.createElement("tr");
+    const date=d.createdAt?.toDate?d.createdAt.toDate().toLocaleString():"—";
+    const imageCell=d.image?`<img src="${d.image}" alt="">`:"—";
+    tr.innerHTML=`<td>${imageCell}</td><td><strong>${escapeHtml(d.title||"Untitled")}</strong><br><small>${escapeHtml((d.message||"").slice(0,120))}${(d.message||"").length>120?"…":""}</small></td><td>${d.published?"Published":"Draft"}</td><td>${date}</td><td><div class="actions"><button class="btn secondary edit" data-id="${item.id}">Edit</button><button class="btn danger delete" data-id="${item.id}">Delete</button></div></td>`;
+    rows.appendChild(tr);
+  });
+  rows.querySelectorAll(".edit").forEach(b=>b.onclick=()=>editAnnouncement(b.dataset.id));
+  rows.querySelectorAll(".delete").forEach(b=>b.onclick=()=>deleteAnnouncement(b.dataset.id));
+ }catch(err){console.error(err);rows.innerHTML='<tr><td colspan="5" class="empty">Could not load announcements. Check Firestore rules and connection.</td></tr>'}
+}
+
+async function editAnnouncement(id){
+ const snap=await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js").then(m=>m.getDoc(m.doc(db,"announcements",id)));
+ const d=snap.data(); editId.value=id; title.value=d.title||""; message.value=d.message||""; published.value=String(d.published!==false);
+ formTitle.textContent="Edit Announcement";saveBtn.textContent="Update Announcement";
+ if(d.image){preview.src=d.image;previewWrap.classList.remove("hidden")}else{previewWrap.classList.add("hidden")}
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteAnnouncement(id){
+ if(!confirm("Delete this announcement?"))return;
+ try{await deleteDoc(doc(db,"announcements",id));showNotice("Announcement deleted.");loadAnnouncements();}
+ catch(err){showNotice(err.message||"Could not delete announcement.","error")}
+}
+
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+loadAnnouncements();
+</script>
+</body></html>

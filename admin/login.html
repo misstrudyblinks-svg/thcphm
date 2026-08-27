@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Login | The Call Prayer Ministry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--burgundy:#651b32;--dark:#3d1020;--gold:#d4a72c;--cream:#f7f2e8}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,Arial,sans-serif;background:linear-gradient(135deg,var(--dark),var(--burgundy));min-height:100vh;display:grid;place-items:center;padding:20px;color:#fff}
+.login-shell{width:min(430px,100%);background:rgba(255,253,248,.98);color:#171717;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.3);padding:34px}
+.logo{width:88px;height:88px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 18px;border:2px solid var(--gold)}
+h1{font-family:"Cormorant Garamond",Georgia,serif;text-align:center;color:var(--dark);font-size:2.8rem;margin:0}.sub{text-align:center;color:#716a64;font-size:.78rem;margin:5px 0 25px}
+.field{display:grid;gap:7px;margin-bottom:15px}.field label{font-size:.72rem;font-weight:700;color:#716a64}.field input{padding:13px;border:1px solid #e3d8ca;border-radius:9px;outline:none}.field input:focus{border-color:var(--gold)}
+button{width:100%;padding:14px;border:0;border-radius:9px;background:var(--gold);font-weight:800;color:#251d0c;cursor:pointer}button:disabled{opacity:.6;cursor:not-allowed}
+.notice{display:none;padding:11px;border-radius:8px;font-size:.75rem;margin-bottom:14px}.notice.show{display:block}.error{background:#fae9ed;color:#7d2138}.hint{font-size:.67rem;color:#8a8279;text-align:center;margin-top:20px;line-height:1.6}
+</style>
+</head>
+<body>
+<main class="login-shell">
+<img class="logo" src="../images/logo.jpeg" alt="The Call Prayer Ministry">
+<h1>Admin Portal</h1><p class="sub">The Call Prayer Ministry · House of Refuge</p>
+<div id="notice" class="notice error"></div>
+<form id="loginForm">
+<div class="field"><label for="email">ADMIN EMAIL</label><input id="email" type="email" autocomplete="username" required></div>
+<div class="field"><label for="password">PASSWORD</label><input id="password" type="password" autocomplete="current-password" required></div>
+<button id="loginBtn" type="submit">Sign In</button>
+</form>
+<p class="hint">Only accounts marked <strong>admin</strong> in the Firestore <strong>users</strong> collection can access this panel.</p>
+</main>
+<script type="module">
+import { auth, db } from "../js/firebase-config.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+const form=document.getElementById("loginForm"), btn=document.getElementById("loginBtn"), notice=document.getElementById("notice");
+function showError(message){notice.textContent=message;notice.classList.add("show")}
+form.addEventListener("submit",async(e)=>{
+ e.preventDefault(); notice.classList.remove("show"); btn.disabled=true; btn.textContent="Signing in...";
+ try{
+   const cred=await signInWithEmailAndPassword(auth,form.email.value.trim(),form.password.value);
+   const snap=await getDoc(doc(db,"users",cred.user.uid));
+   if(!snap.exists() || snap.data().role!=="admin"){ await auth.signOut(); throw new Error("This account is not authorized as an admin.");}
+   window.location.href="dashboard.html";
+ }catch(err){
+   console.error(err);
+   showError(err.code==="auth/invalid-credential" ? "Incorrect email or password." : (err.message||"Unable to sign in."));
+   btn.disabled=false; btn.textContent="Sign In";
+ }
+});
+</script>
+</body></html>
