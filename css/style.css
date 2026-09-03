@@ -123,7 +123,7 @@ cite{font-size:.72rem;text-transform:uppercase;letter-spacing:.2em;color:var(--g
 
 .section-heading.split{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:55px}
 .sermon-feature{display:grid;grid-template-columns:1.15fr 1fr;background:#fff;box-shadow:var(--shadow)}
-.sermon-image{min-height:480px;background:url('../images/download\ \(6\).jpg') center/cover;display:grid;place-items:center;position:relative}
+.sermon-image{min-height:480px;background:url('../images/paster\ on.jpeg') center/cover;display:grid;place-items:center;position:relative}
 .sermon-image:after{content:"";position:absolute;inset:0;background:rgba(61,16,32,.2)}
 .play-button{width:82px;height:82px;border-radius:50%;background:var(--gold);color:#261d09;display:grid;place-items:center;position:relative;z-index:1;padding-left:4px;transition:.3s}
 .play-button:hover{transform:scale(1.08)}
