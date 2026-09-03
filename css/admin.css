@@ -58,3 +58,932 @@ button,input,textarea,select{font:inherit}
 .visit-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
 @media(max-width:900px){.visit-request-details{grid-template-columns:1fr 1fr}.visit-requests-card .table-wrap{overflow:visible}}
 @media(max-width:600px){.visit-request-card{padding:15px}.visit-request-head{display:grid}.visit-request-details{grid-template-columns:1fr}.visit-actions .btn{flex:1 1 100%}.main p,.card p{font-size:.9rem}}
+
+
+/* =========================================================
+   NEW ADMIN DASHBOARD
+========================================================= */
+
+.dashboard-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.dashboard-eyebrow,
+.section-kicker {
+    display: block;
+    color: var(--gold);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.topbar h1 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2.25rem;
+    letter-spacing: -.02em;
+}
+
+.website-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.website-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(212,167,44,.22);
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 34px;
+}
+
+.dashboard-stat-card {
+    position: relative;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf8,
+            #fbf6ed
+        );
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 12px 35px rgba(61,16,32,.07);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+.dashboard-stat-card::before {
+    content: "";
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    right: -35px;
+    top: -35px;
+
+    border-radius: 50%;
+
+    background: rgba(212,167,44,.08);
+
+    transition: transform .4s ease;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212,167,44,.55);
+
+    box-shadow:
+        0 20px 45px rgba(61,16,32,.12);
+}
+
+.dashboard-stat-card:hover::before {
+    transform: scale(1.7);
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--burgundy),
+            var(--burgundy-dark)
+        );
+
+    color: var(--gold-light);
+
+    font-size: 1.2rem;
+
+    box-shadow:
+        0 8px 18px rgba(61,16,32,.16);
+}
+
+.stat-content {
+    min-width: 0;
+}
+
+.stat-content span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: .61rem;
+    line-height: 1.35;
+
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    font-weight: 700;
+}
+
+.stat-content strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--burgundy-dark);
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    font-size: 1.85rem;
+    line-height: 1;
+}
+
+.dashboard-stat-card > a {
+    grid-column: 1 / -1;
+
+    margin-top: 14px;
+
+    padding-top: 11px;
+
+    border-top: 1px solid var(--border);
+
+    color: var(--burgundy);
+
+    font-size: .67rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .07em;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+.dashboard-stat-card > a:hover {
+    color: var(--gold);
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-actions-section {
+    margin-top: 8px;
+}
+
+.dashboard-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.dashboard-section-heading h2 {
+    margin: 0;
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    color: var(--burgundy-dark);
+
+    font-size: 1.65rem;
+}
+
+.dashboard-section-heading p {
+    max-width: 600px;
+
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: .78rem;
+    line-height: 1.65;
+}
+
+
+/* ACTION GRID */
+
+.quick-actions-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+
+/* ACTION CARD */
+
+.quick-action-card {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    min-height: 145px;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    box-shadow:
+        0 12px 30px rgba(61,16,32,.055);
+
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        box-shadow .35s ease,
+        border-color .35s ease;
+}
+
+.quick-action-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    right: -55px;
+    bottom: -55px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,167,44,.15),
+            transparent 68%
+        );
+
+    transition:
+        transform .45s ease;
+}
+
+.quick-action-card:hover {
+    transform:
+        translateY(-7px)
+        scale(1.01);
+
+    border-color:
+        rgba(212,167,44,.55);
+
+    box-shadow:
+        0 22px 45px rgba(61,16,32,.12);
+}
+
+.quick-action-card:hover::before {
+    transform: scale(2.1);
+}
+
+
+/* ICON */
+
+.quick-action-icon {
+    flex: 0 0 auto;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--burgundy),
+            var(--burgundy-dark)
+        );
+
+    color: var(--gold-light);
+
+    font-size: 1.25rem;
+
+    box-shadow:
+        0 8px 20px rgba(61,16,32,.15);
+
+    transition:
+        transform .35s ease;
+}
+
+.quick-action-card:hover
+.quick-action-icon {
+    transform:
+        rotate(-7deg)
+        scale(1.08);
+}
+
+
+/* TEXT */
+
+.quick-action-text {
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.quick-action-text h3 {
+    margin-bottom: 6px;
+
+    color: var(--burgundy-dark);
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    font-size: 1.05rem;
+}
+
+.quick-action-text p {
+    color: var(--muted);
+
+    font-size: .69rem;
+    line-height: 1.55;
+
+    margin: 0;
+}
+
+
+/* ARROW */
+
+.quick-action-arrow {
+    position: absolute;
+
+    right: 15px;
+    bottom: 14px;
+
+    color: var(--gold);
+
+    font-size: 1.1rem;
+    font-weight: 800;
+
+    opacity: .65;
+
+    transition:
+        transform .3s ease,
+        opacity .3s ease;
+}
+
+.quick-action-card:hover
+.quick-action-arrow {
+    transform: translateX(5px);
+    opacity: 1;
+}
+
+
+/* =========================================================
+   BOTTOM DASHBOARD CARDS
+========================================================= */
+
+.dashboard-bottom {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-top: 24px;
+    padding-bottom: 20px;
+}
+
+.dashboard-info-card {
+    display: flex;
+
+    gap: 16px;
+
+    padding: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--burgundy-dark),
+            var(--burgundy)
+        );
+
+    color: #fff;
+
+    border-radius: 17px;
+
+    box-shadow:
+        0 15px 35px rgba(61,16,32,.15);
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.dashboard-info-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    right: -70px;
+    bottom: -70px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(240,214,129,.15);
+
+    box-shadow:
+        0 0 0 25px rgba(240,214,129,.04),
+        0 0 0 50px rgba(240,214,129,.025);
+}
+
+.info-card-icon {
+    flex: 0 0 auto;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(212,167,44,.16);
+
+    color: var(--gold-light);
+
+    font-size: 1.2rem;
+}
+
+.dashboard-info-card h3 {
+    margin: 0 0 7px;
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    font-size: 1.25rem;
+
+    color: #fff;
+}
+
+.dashboard-info-card p {
+    max-width: 500px;
+
+    margin: 0;
+
+    color: rgba(255,255,255,.72);
+
+    font-size: .72rem;
+    line-height: 1.7;
+}
+
+.dashboard-info-card .section-kicker {
+    color: var(--gold-light);
+}
+
+.text-link {
+    display: inline-block;
+
+    margin-top: 12px;
+
+    color: var(--gold-light);
+
+    font-size: .68rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.text-link:hover {
+    color: #fff;
+}
+
+
+/* =========================================================
+   TABLE IMPROVEMENTS
+========================================================= */
+
+.table-wrap {
+    border-radius: 13px;
+}
+
+.data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    width: 100%;
+
+    color: #393532;
+}
+
+.data-table thead th {
+    background:
+        #f5eee3;
+
+    color: var(--burgundy-dark);
+
+    padding: 14px 15px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    font-size: .65rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.data-table thead th:first-child {
+    border-radius: 10px 0 0 0;
+}
+
+.data-table thead th:last-child {
+    border-radius: 0 10px 0 0;
+}
+
+.data-table tbody td {
+    padding: 15px;
+
+    border-bottom:
+        1px solid #eee6da;
+
+    background: #fffdf8;
+
+    font-size: .78rem;
+
+    line-height: 1.65;
+
+    vertical-align: middle;
+}
+
+.data-table tbody tr {
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.data-table tbody tr:hover td {
+    background: #fffaf1;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.data-table td strong {
+    color: var(--burgundy-dark);
+
+    font-weight: 800;
+}
+
+.data-table td img {
+    width: 58px;
+    height: 52px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+
+    border:
+        1px solid var(--border);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: .61rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .06em;
+}
+
+.status-badge::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+.status-new {
+    background: #fff1c8;
+    color: #765500;
+}
+
+.status-prayed,
+.status-approved {
+    background: #e8f5ea;
+    color: #286235;
+}
+
+.status-read {
+    background: #e7edf7;
+    color: #27466e;
+}
+
+.status-pending {
+    background: #fff1c8;
+    color: #765500;
+}
+
+.status-rejected {
+    background: #fae9ed;
+    color: #7d2138;
+}
+
+
+/* =========================================================
+   TABLE ACTION BUTTONS
+========================================================= */
+
+.table-actions {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.table-actions .btn {
+    padding: 8px 10px;
+
+    font-size: .6rem;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PRAYER REQUEST SPECIAL TABLE
+========================================================= */
+
+.prayer-table .prayer-person {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.prayer-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--burgundy),
+            var(--burgundy-dark)
+        );
+
+    color: var(--gold-light);
+
+    font-weight: 800;
+}
+
+.prayer-person-info strong {
+    display: block;
+}
+
+.prayer-person-info small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: .65rem;
+}
+
+.prayer-contact {
+    color: #514b47;
+
+    font-size: .72rem;
+
+    line-height: 1.8;
+}
+
+.prayer-message {
+    max-width: 440px;
+
+    color: #4b4642;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   TESTIMONY TABLE
+========================================================= */
+
+.testimony-person {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.testimony-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            #a97912
+        );
+
+    color: #fff;
+
+    font-weight: 800;
+}
+
+.testimony-text {
+    max-width: 480px;
+
+    color: #4b4642;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1250px) {
+
+    .dashboard-stats {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .quick-actions-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .dashboard-stats {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .quick-actions-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .dashboard-bottom {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-section-heading h2 {
+        font-size: 1.4rem;
+    }
+
+    .dashboard-stat-card {
+        min-height: 125px;
+    }
+
+    .dashboard-info-card {
+        padding: 18px;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .dashboard-heading {
+        display: block;
+    }
+
+    .dashboard-heading .mobile-menu {
+        margin-bottom: 12px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .website-btn {
+        padding: 9px 11px;
+        font-size: .62rem;
+    }
+
+    .topbar h1 {
+        font-size: 1.75rem;
+    }
+
+    .quick-action-card {
+        min-height: 125px;
+        padding: 17px;
+    }
+
+}
+

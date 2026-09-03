@@ -139,14 +139,228 @@ url('../images/download\ \(2\).jpg') center/cover,#6c2d42}
 .meeting-image.outreach{background-image:url('../images/born\ \(3\).jpg')}
 
 .gallery-section{background:#fffaf0}
-.mini-gallery{display:grid;grid-template-columns:1.4fr .8fr .8fr;grid-template-rows:210px 210px;gap:12px}
-.mini-gallery div{background:center/cover;background-color:#714155;overflow:hidden;position:relative}
-.mini-gallery div:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(30,8,17,.35))}
-.mini-gallery .g1{grid-row:span 2;background-image:url('../images/de\ joelhos\ para\ cruz.jpg')}
-.mini-gallery .g2{background-image:url('../images/event-1.jpg')}
-.mini-gallery .g3{background-image:url('../images/event-2.jpg')}
-.mini-gallery .g4{background-image:url('../images/event-3.jpg')}
-.mini-gallery .g5{background-image:url('../images/church.jpg')}
+/* =========================================
+   MINISTRY GALLERIES
+========================================= */
+
+.gallery-description {
+    max-width: 430px;
+    color: var(--muted);
+    font-size: .8rem;
+    line-height: 1.8;
+}
+
+.mini-gallery {
+    display: grid;
+    grid-template-columns: 1.4fr .8fr .8fr;
+    grid-template-rows: 210px 210px;
+    gap: 12px;
+}
+
+.mini-gallery div {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #714155;
+    overflow: hidden;
+    position: relative;
+    min-height: 150px;
+    transition: transform .4s ease;
+}
+
+.mini-gallery div:hover {
+    transform: scale(.98);
+}
+
+.mini-gallery div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(30, 8, 17, .35)
+    );
+}
+
+.mini-gallery .g1 {
+    grid-row: span 2;
+}
+
+
+/* =========================================
+   CHILDREN'S MINISTRY GALLERY
+   Change only these images for Children
+========================================= */
+
+.children-gallery .g1 {
+    background-image: url("../images/children-1.jpg");
+}
+
+.children-gallery .g2 {
+    background-image: url("../images/children-2.jpg");
+}
+
+.children-gallery .g3 {
+    background-image: url("../images/children-3.jpg");
+}
+
+.children-gallery .g4 {
+    background-image: url("../images/children-4.jpg");
+}
+
+.children-gallery .g5 {
+    background-image: url("../images/children-5.jpg");
+}
+
+
+/* =========================================
+   YOUTH MINISTRY GALLERY
+========================================= */
+
+.youth-gallery .g1 {
+    background-image: url("../images/youth-1.jpg");
+}
+
+.youth-gallery .g2 {
+    background-image: url("../images/youth-2.jpg");
+}
+
+.youth-gallery .g3 {
+    background-image: url("../images/youth-3.jpg");
+}
+
+.youth-gallery .g4 {
+    background-image: url("../images/youth-4.jpg");
+}
+
+.youth-gallery .g5 {
+    background-image: url("../images/youth-5.jpg");
+}
+
+
+/* =========================================
+   WOMEN'S MINISTRY GALLERY
+========================================= */
+
+.women-gallery .g1 {
+    background-image: url("../images/women-1.jpg");
+}
+
+.women-gallery .g2 {
+    background-image: url("../images/women-2.jpg");
+}
+
+.women-gallery .g3 {
+    background-image: url("../images/women-3.jpg");
+}
+
+.women-gallery .g4 {
+    background-image: url("../images/women-4.jpg");
+}
+
+.women-gallery .g5 {
+    background-image: url("../images/women-5.jpg");
+}
+
+
+/* =========================================
+   MEN'S MINISTRY GALLERY
+========================================= */
+
+.men-gallery .g1 {
+    background-image: url("../images/men-1.jpg");
+}
+
+.men-gallery .g2 {
+    background-image: url("../images/men-2.jpg");
+}
+
+.men-gallery .g3 {
+    background-image: url("../images/men-3.jpg");
+}
+
+.men-gallery .g4 {
+    background-image: url("../images/men-4.jpg");
+}
+
+.men-gallery .g5 {
+    background-image: url("../images/men-5.jpg");
+}
+
+
+/* =========================================
+   PRAYER MINISTRY GALLERY
+========================================= */
+
+.prayer-gallery .g1 {
+    background-image: url("../images/prayer-1.jpg");
+}
+
+.prayer-gallery .g2 {
+    background-image: url("../images/prayer-2.jpg");
+}
+
+.prayer-gallery .g3 {
+    background-image: url("../images/prayer-3.jpg");
+}
+
+.prayer-gallery .g4 {
+    background-image: url("../images/prayer-4.jpg");
+}
+
+.prayer-gallery .g5 {
+    background-image: url("../images/prayer-5.jpg");
+}
+
+
+/* =========================================
+   OUTREACH MINISTRY GALLERY
+========================================= */
+
+.outreach-gallery .g1 {
+    background-image: url("../images/outreach-1.jpg");
+}
+
+.outreach-gallery .g2 {
+    background-image: url("../images/outreach-2.jpg");
+}
+
+.outreach-gallery .g3 {
+    background-image: url("../images/outreach-3.jpg");
+}
+
+.outreach-gallery .g4 {
+    background-image: url("../images/outreach-4.jpg");
+}
+
+.outreach-gallery .g5 {
+    background-image: url("../images/outreach-5.jpg");
+}
+
+
+/* =========================================
+   MOBILE MINISTRY GALLERY
+========================================= */
+
+@media (max-width: 700px) {
+
+    .mini-gallery {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .mini-gallery .g1 {
+        grid-column: span 2;
+        grid-row: auto;
+        min-height: 300px;
+    }
+
+    .mini-gallery div {
+        min-height: 180px;
+    }
+
+}
 
 .join-section{background:var(--burgundy);color:#fff}
 .join-box{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}

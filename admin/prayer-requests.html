@@ -1,39 +1,750 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Prayer Requests | The Call Prayer Ministry</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/admin.css"></head><body>
-<div class="admin-shell"><aside class="sidebar" id="sidebar">
-<div class="sidebar-brand"><img src="../images/logo.jpeg" alt="The Call Prayer Ministry"><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
-<nav class="sidebar-nav">
-<a href="dashboard.html">Dashboard</a>
-<a href="announcements.html">Announcements</a>
-<a href="programs.html">Programs / Events</a>
-<a href="sermons.html">Sermons</a>
-<a href="gallery.html">Gallery</a>
-<a class="active" href="prayer-requests.html">Prayer Requests</a>
-<a href="visit-requests.html">Visit Requests</a>
-<a href="testimonies.html">Testimonies</a>
-<a href="members.html">Members</a>
-<a href="settings.html">Church Settings</a>
-</nav><div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div></aside>
-<main class="main"><div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Prayer Requests</h1><p>Review prayer requests submitted by visitors.</p></div><a class="btn" href="../index.html">View Website</a></div>
-<div id="notice" class="notice hidden"></div><section class="card"><div class="section-title"><h2>Incoming Requests</h2><button class="btn secondary" id="refreshBtn">Refresh</button></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Contact</th><th>Prayer Request</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody></table></div></section></main></div>
-<script type="module">import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
-import { db } from "../js/firebase-config.js";
-import { imageFileToBase64 } from "../js/image-helper.js";
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-requireAdmin();
-document.getElementById("logoutBtn").onclick=logoutAdmin;
-document.getElementById("mobileMenu")?.addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
 
-const $=id=>document.getElementById(id),rows=$("rows"),notice=$("notice");
-function note(t,type="success"){notice.textContent=t;notice.className="notice "+type;setTimeout(()=>notice.className="notice hidden",3500)}
-$("refreshBtn").onclick=load;
-async function load(){rows.innerHTML='<tr><td colspan="6" class="empty">Loading...</td></tr>';try{let s=await getDocs(collection(db,"prayerRequests"));let a=s.docs.map(d=>({id:d.id,...d.data()}));a.sort((x,y)=>(y.createdAt?.seconds||0)-(x.createdAt?.seconds||0));rows.innerHTML=a.length?a.map(x=>`<tr><td><strong>${esc(x.name||"Anonymous")}</strong></td><td>${esc(x.phone||"")}<br>${esc(x.email||"")}</td><td style="min-width:260px;white-space:pre-wrap">${esc(x.request||"")}</td><td>${fmt(x.createdAt)}</td><td>${esc(x.status||"new")}</td><td><button class="btn" onclick="markPrayer('${x.id}','prayed')">Prayed</button> <button class="btn secondary" onclick="markPrayer('${x.id}','read')">Read</button> <button class="btn danger" onclick="removePrayer('${x.id}')">Delete</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No prayer requests yet.</td></tr>'}catch(e){console.error(e);rows.innerHTML='<tr><td colspan="6" class="empty">Could not load requests.</td></tr>'}}
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}function fmt(t){return t?.toDate?t.toDate().toLocaleString():"—"}
-window.markPrayer=async(id,status)=>{await updateDoc(doc(db,"prayerRequests",id),{status,updatedAt:serverTimestamp()});note("Prayer request updated.");load()}
-window.removePrayer=async id=>{if(confirm("Delete this prayer request?")){await deleteDoc(doc(db,"prayerRequests",id));note("Prayer request deleted.");load()}};load();
-</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Prayer Requests | The Call Prayer Ministry</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<link rel="stylesheet" href="../css/admin.css">
+```
+
+</head>
+
+<body>
+
+<div class="admin-shell">
+
+```
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <img
+            src="../images/logo.jpeg"
+            alt="The Call Prayer Ministry"
+        >
+
+        <div>
+            <strong>THE CALL</strong>
+            <span>PRAYER MINISTRY</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html">Dashboard</a>
+
+        <a href="announcements.html">Announcements</a>
+
+        <a href="programs.html">Programs / Events</a>
+
+        <a href="sermons.html">Sermons</a>
+
+        <a href="gallery.html">Gallery</a>
+
+        <a
+            class="active"
+            href="prayer-requests.html"
+        >
+            Prayer Requests
+        </a>
+
+        <a href="visit-requests.html">Visit Requests</a>
+
+        <a href="testimonies.html">Testimonies</a>
+
+        <a href="members.html">Members</a>
+
+        <a href="settings.html">Church Settings</a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <button
+            class="logout"
+            id="logoutBtn"
+        >
+            Sign Out
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+        <div>
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu"
+            >
+                ☰ Menu
+            </button>
+
+            <h1>Prayer Requests</h1>
+
+            <p>
+                Review prayer requests submitted by visitors.
+            </p>
+
+        </div>
+
+        <a
+            class="btn"
+            href="../index.html"
+        >
+            View Website
+        </a>
+
+    </div>
+
+
+    <!-- NOTIFICATION -->
+    <div
+        id="notice"
+        class="notice hidden"
+    ></div>
+
+
+    <!-- PRAYER REQUEST CARD -->
+    <section class="card prayer-requests-card">
+
+        <div class="section-title">
+
+            <div>
+
+                <span class="section-kicker">
+                    INBOX
+                </span>
+
+                <h2>
+                    Prayer Requests
+                </h2>
+
+            </div>
+
+            <button
+                class="btn secondary"
+                id="refreshBtn"
+            >
+                ↻ Refresh
+            </button>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+
+            <table class="data-table prayer-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Person</th>
+
+                        <th>Contact</th>
+
+                        <th>Prayer Request</th>
+
+                        <th>Date</th>
+
+                        <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="rows">
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty"
+                        >
+                            Loading prayer requests...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+```
+
+</div>
+
+<!-- FIREBASE / PAGE SCRIPT -->
+
+<script type="module">
+
+    import {
+        requireAdmin,
+        logoutAdmin
+    } from "../js/admin-auth.js";
+
+
+    import {
+        db
+    } from "../js/firebase-config.js";
+
+
+    import {
+        collection,
+        updateDoc,
+        deleteDoc,
+        doc,
+        getDocs,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+
+    /*
+     * ADMIN AUTHENTICATION
+     */
+    requireAdmin();
+
+
+    /*
+     * ELEMENTS
+     */
+    const $ = id => document.getElementById(id);
+
+    const rows = $("rows");
+    const notice = $("notice");
+
+
+    /*
+     * LOGOUT
+     */
+    $("logoutBtn").onclick = logoutAdmin;
+
+
+    /*
+     * MOBILE SIDEBAR
+     */
+    $("mobileMenu")?.addEventListener(
+        "click",
+        () => {
+            $("sidebar").classList.toggle("open");
+        }
+    );
+
+
+    /*
+     * NOTIFICATION
+     */
+    function note(message, type = "success") {
+
+        notice.textContent = message;
+
+        notice.className = "notice " + type;
+
+        setTimeout(() => {
+
+            notice.className = "notice hidden";
+
+        }, 3500);
+
+    }
+
+
+    /*
+     * ESCAPE HTML
+     * Prevents user-submitted text from breaking the page.
+     */
+    function esc(value) {
+
+        return String(value ?? "").replace(
+            /[&<>"']/g,
+            character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[character]
+        );
+
+    }
+
+
+    /*
+     * FORMAT FIRESTORE DATE
+     */
+    function fmt(timestamp) {
+
+        if (!timestamp) {
+            return "—";
+        }
+
+        if (timestamp.toDate) {
+
+            return timestamp
+                .toDate()
+                .toLocaleString();
+
+        }
+
+        return "—";
+
+    }
+
+
+    /*
+     * LOAD PRAYER REQUESTS
+     */
+    async function load() {
+
+        /*
+         * Show loading state
+         */
+        rows.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    Loading prayer requests...
+                </td>
+            </tr>
+        `;
+
+
+        try {
+
+            /*
+             * GET DATA FROM FIRESTORE
+             */
+            const snapshot = await getDocs(
+                collection(db, "prayerRequests")
+            );
+
+
+            /*
+             * CONVERT FIRESTORE DOCUMENTS
+             * INTO NORMAL JAVASCRIPT OBJECTS
+             */
+            let requests = snapshot.docs.map(
+                document => ({
+                    id: document.id,
+                    ...document.data()
+                })
+            );
+
+
+            /*
+             * SORT NEWEST FIRST
+             */
+            requests.sort(
+                (a, b) =>
+                    (b.createdAt?.seconds || 0) -
+                    (a.createdAt?.seconds || 0)
+            );
+
+
+            /*
+             * NO REQUESTS
+             */
+            if (requests.length === 0) {
+
+                rows.innerHTML = `
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty"
+                        >
+
+                            <strong>
+                                No prayer requests yet
+                            </strong>
+
+                            <br>
+
+                            New prayer requests will appear here.
+
+                        </td>
+
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            /*
+             * DISPLAY REQUESTS
+             */
+            rows.innerHTML = requests.map(request => {
+
+                const name =
+                    request.name ||
+                    "Anonymous";
+
+
+                const initial =
+                    name
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase();
+
+
+                const status =
+                    (request.status || "new")
+                        .toLowerCase();
+
+
+                /*
+                 * STATUS CLASS
+                 */
+                let statusClass = "status-new";
+
+
+                if (status === "prayed") {
+
+                    statusClass = "status-prayed";
+
+                } else if (status === "read") {
+
+                    statusClass = "status-read";
+
+                }
+
+
+                return `
+
+                    <tr>
+
+                        <!-- PERSON -->
+                        <td>
+
+                            <div class="prayer-person">
+
+                                <div class="prayer-avatar">
+                                    ${esc(initial)}
+                                </div>
+
+                                <div class="prayer-person-info">
+
+                                    <strong>
+                                        ${esc(name)}
+                                    </strong>
+
+                                    <small>
+                                        Prayer Request
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CONTACT -->
+                        <td>
+
+                            <div class="prayer-contact">
+
+                                ${
+                                    request.phone
+                                    ?
+                                    `<div>
+                                        ☎ ${esc(request.phone)}
+                                    </div>`
+                                    :
+                                    ""
+                                }
+
+
+                                ${
+                                    request.email
+                                    ?
+                                    `<div>
+                                        ✉ ${esc(request.email)}
+                                    </div>`
+                                    :
+                                    ""
+                                }
+
+
+                                ${
+                                    !request.phone &&
+                                    !request.email
+                                    ?
+                                    `<span>—</span>`
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- REQUEST -->
+                        <td>
+
+                            <div class="prayer-message">
+
+                                ${esc(
+                                    request.request ||
+                                    "No prayer request provided."
+                                )}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- DATE -->
+                        <td>
+
+                            ${fmt(request.createdAt)}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+                        <td>
+
+                            <span
+                                class="status-badge ${statusClass}"
+                            >
+                                ${esc(status)}
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+                        <td>
+
+                            <div class="table-actions">
+
+                                <button
+                                    class="btn"
+                                    onclick="markPrayer('${request.id}', 'prayed')"
+                                >
+                                    Prayed
+                                </button>
+
+
+                                <button
+                                    class="btn secondary"
+                                    onclick="markPrayer('${request.id}', 'read')"
+                                >
+                                    Read
+                                </button>
+
+
+                                <button
+                                    class="btn danger"
+                                    onclick="removePrayer('${request.id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }).join("");
+
+
+        } catch (error) {
+
+            /*
+             * SHOW THE REAL ERROR IN CONSOLE
+             */
+            console.error(
+                "Error loading prayer requests:",
+                error
+            );
+
+
+            /*
+             * SHOW ERROR ON PAGE
+             */
+            rows.innerHTML = `
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="empty"
+                    >
+
+                        <strong>
+                            Could not load prayer requests.
+                        </strong>
+
+                        <br><br>
+
+                        Please check your Firebase connection
+                        and Firestore rules.
+
+                    </td>
+
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * MARK PRAYER REQUEST
+     */
+    window.markPrayer = async function(id, status) {
+
+        try {
+
+            await updateDoc(
+                doc(db, "prayerRequests", id),
+                {
+                    status: status,
+                    updatedAt: serverTimestamp()
+                }
+            );
+
+
+            note(
+                "Prayer request marked as " + status + "."
+            );
+
+
+            /*
+             * REFRESH TABLE
+             */
+            await load();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error updating prayer request:",
+                error
+            );
+
+
+            note(
+                "Could not update prayer request.",
+                "error"
+            );
+
+        }
+
+    };
+
+
+    /*
+     * DELETE PRAYER REQUEST
+     */
+    window.removePrayer = async function(id) {
+
+        const confirmed = confirm(
+            "Delete this prayer request? This cannot be undone."
+        );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            await deleteDoc(
+                doc(db, "prayerRequests", id)
+            );
+
+
+            note(
+                "Prayer request deleted."
+            );
+
+
+            /*
+             * REFRESH TABLE
+             */
+            await load();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error deleting prayer request:",
+                error
+            );
+
+
+            note(
+                "Could not delete prayer request.",
+                "error"
+            );
+
+        }
+
+    };
+
+
+    /*
+     * REFRESH BUTTON
+     */
+    $("refreshBtn").addEventListener(
+        "click",
+        load
+    );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Wait until admin authentication has
+     * successfully completed before loading
+     * Firestore data.
+     */
+    document.addEventListener(
+        "tcpAdminReady",
+        () => {
+            load();
+        },
+        { once: true }
+    );
+
+</script>
+
+</body>
+</html>

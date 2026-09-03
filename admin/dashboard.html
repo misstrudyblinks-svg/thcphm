@@ -1,63 +1,808 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Admin Dashboard | The Call Prayer Ministry</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/admin.css">
-</head>
-<body>
-<div class="admin-shell">
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-brand"><img src="../images/logo.jpeg" alt=""><div><strong>THE CALL</strong><span>PRAYER MINISTRY</span></div></div>
-<nav class="sidebar-nav">
-<a class="active" href="dashboard.html">Dashboard</a>
-<a href="announcements.html">Announcements</a>
-<a href="programs.html">Programs / Events</a>
-<a href="sermons.html">Sermons</a>
-<a href="gallery.html">Gallery</a>
-<a href="prayer-requests.html">Prayer Requests</a><a href="visit-requests.html">Visit Requests</a>
-<a href="testimonies.html">Testimonies</a>
-<a href="members.html">Members</a>
-<a href="settings.html">Church Settings</a>
-</nav>
-<div class="sidebar-bottom"><button class="logout" id="logoutBtn">Sign Out</button></div>
-</aside>
-<main class="main">
-<div class="topbar"><div><button class="mobile-menu" id="mobileMenu">☰ Menu</button><h1>Dashboard</h1><p>Welcome to the church administration portal.</p></div><a class="btn" href="../index.html">View Website</a></div>
-<section class="grid">
-<div class="card stat"><strong id="announcementCount">—</strong><span>Announcements</span></div>
-<div class="card stat"><strong id="programCount">—</strong><span>Programs</span></div>
-<div class="card stat"><strong id="prayerCount">—</strong><span>Prayer Requests</span></div>
-<div class="card stat"><strong id="testimonyCount">—</strong><span>Pending Testimonies</span></div><div class="card stat"><strong id="visitCount">—</strong><span>Visit Requests</span></div>
-</section>
-<section class="two">
-<div class="card"><div class="section-title"><h2>Admin Foundation</h2></div>
-<p style="color:#716a64;font-size:.84rem;line-height:1.8">Firebase Authentication and Firestore are connected. The dashboard will read live data from your <strong>thcphm</strong> project. Images will be compressed into Base64 before being stored in Firestore; Firebase Storage is not used.</p>
-<div class="actions"><a class="btn" href="announcements.html">Manage Announcements</a><a class="btn secondary" href="../index.html">Open Public Site</a></div></div>
-<div class="card"><div class="section-title"><h2>Next Modules</h2></div>
-<ul style="padding-left:20px;color:#716a64;font-size:.82rem;line-height:2"><li>Programs / Events</li><li>Sermons</li><li>Gallery</li><li>Prayer Requests</li><li>Testimonies approval</li><li>Members</li><li>Church Settings</li></ul></div>
-</section>
-</main></div>
-<script type="module">
-import { db } from "../js/firebase-config.js";
-import { collection, getCountFromServer, query, where } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { requireAdmin, logoutAdmin } from "../js/admin-auth.js";
-requireAdmin();
-document.getElementById("logoutBtn").onclick=logoutAdmin;
-document.getElementById("mobileMenu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
 
-async function count(path, el, q=null){
- try{const ref=q?query(collection(db,path),q):collection(db,path); const snap=await getCountFromServer(ref); document.getElementById(el).textContent=snap.data().count;}
- catch(e){console.warn("Count failed",path,e);document.getElementById(el).textContent="0";}
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>
+    Admin Dashboard | The Call Prayer Ministry
+</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+<link
+    rel="stylesheet"
+    href="../css/admin.css">
+
+</head>
+
+
+<body>
+
+<div class="admin-shell">
+
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar">
+
+    <div class="sidebar-brand">
+
+        <img
+            src="../images/logo.jpeg"
+            alt="The Call Prayer Ministry">
+
+        <div>
+
+            <strong>THE CALL</strong>
+
+            <span>
+                PRAYER MINISTRY
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a
+            class="active"
+            href="dashboard.html">
+
+            Dashboard
+
+        </a>
+
+        <a href="announcements.html">
+            Announcements
+        </a>
+
+        <a href="programs.html">
+            Programs / Events
+        </a>
+
+        <a href="sermons.html">
+            Sermons
+        </a>
+
+        <a href="gallery.html">
+            Gallery
+        </a>
+
+        <a href="prayer-requests.html">
+            Prayer Requests
+        </a>
+
+        <a href="visit-requests.html">
+            Visit Requests
+        </a>
+
+        <a href="testimonies.html">
+            Testimonies
+        </a>
+
+        <a href="members.html">
+            Members
+        </a>
+
+        <a href="settings.html">
+            Church Settings
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <button
+            class="logout"
+            id="logoutBtn">
+
+            Sign Out
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main class="main">
+
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="dashboard-heading">
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu">
+
+                ☰ Menu
+
+            </button>
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    ADMINISTRATION
+                </span>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Welcome back. Here's what's happening
+                    across your church website.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            class="btn website-btn"
+            href="../index.html">
+
+            View Website
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================================
+         STATISTICS
+    ========================================= -->
+
+    <section class="dashboard-stats">
+
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <span>✦</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span>
+                    Announcements
+                </span>
+
+                <strong id="announcementCount">
+                    —
+                </strong>
+
+            </div>
+
+            <a href="announcements.html">
+                View →
+            </a>
+
+        </div>
+
+
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <span>◷</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span>
+                    Programs
+                </span>
+
+                <strong id="programCount">
+                    —
+                </strong>
+
+            </div>
+
+            <a href="programs.html">
+                View →
+            </a>
+
+        </div>
+
+
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <span>♡</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span>
+                    Prayer Requests
+                </span>
+
+                <strong id="prayerCount">
+                    —
+                </strong>
+
+            </div>
+
+            <a href="prayer-requests.html">
+                View →
+            </a>
+
+        </div>
+
+
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <span>✧</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span>
+                    Pending Testimonies
+                </span>
+
+                <strong id="testimonyCount">
+                    —
+                </strong>
+
+            </div>
+
+            <a href="testimonies.html">
+                Review →
+            </a>
+
+        </div>
+
+
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <span>⌂</span>
+            </div>
+
+            <div class="stat-content">
+
+                <span>
+                    Visit Requests
+                </span>
+
+                <strong id="visitCount">
+                    —
+                </strong>
+
+            </div>
+
+            <a href="visit-requests.html">
+                View →
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         QUICK ACTIONS
+    ========================================= -->
+
+    <section class="quick-actions-section">
+
+
+        <div class="dashboard-section-heading">
+
+            <div>
+
+                <span class="section-kicker">
+                    QUICK ACCESS
+                </span>
+
+                <h2>
+                    What would you like to do?
+                </h2>
+
+                <p>
+                    Quickly manage the most important
+                    areas of your church website.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="quick-actions-grid">
+
+
+            <!-- ANNOUNCEMENTS -->
+
+            <a
+                href="announcements.html"
+                class="quick-action-card action-announcements">
+
+                <div class="quick-action-icon">
+                    ✦
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Announcements
+                    </h3>
+
+                    <p>
+                        Create and manage church announcements.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- PROGRAMS -->
+
+            <a
+                href="programs.html"
+                class="quick-action-card action-programs">
+
+                <div class="quick-action-icon">
+                    ◷
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Programs & Events
+                    </h3>
+
+                    <p>
+                        Add upcoming services and events.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- SERMONS -->
+
+            <a
+                href="sermons.html"
+                class="quick-action-card action-sermons">
+
+                <div class="quick-action-icon">
+                    ▶
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Sermons
+                    </h3>
+
+                    <p>
+                        Manage sermons and messages.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- GALLERY -->
+
+            <a
+                href="gallery.html"
+                class="quick-action-card action-gallery">
+
+                <div class="quick-action-icon">
+                    ▣
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Gallery
+                    </h3>
+
+                    <p>
+                        Add and manage church photos.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- PRAYER REQUESTS -->
+
+            <a
+                href="prayer-requests.html"
+                class="quick-action-card action-prayer">
+
+                <div class="quick-action-icon">
+                    ♡
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Prayer Requests
+                    </h3>
+
+                    <p>
+                        Read and respond to prayer requests.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- TESTIMONIES -->
+
+            <a
+                href="testimonies.html"
+                class="quick-action-card action-testimonies">
+
+                <div class="quick-action-icon">
+                    ✧
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Testimonies
+                    </h3>
+
+                    <p>
+                        Review and approve testimonies.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- MEMBERS -->
+
+            <a
+                href="members.html"
+                class="quick-action-card action-members">
+
+                <div class="quick-action-icon">
+                    ♧
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Members
+                    </h3>
+
+                    <p>
+                        Manage church members and records.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- SETTINGS -->
+
+            <a
+                href="settings.html"
+                class="quick-action-card action-settings">
+
+                <div class="quick-action-icon">
+                    ⚙
+                </div>
+
+                <div class="quick-action-text">
+
+                    <h3>
+                        Church Settings
+                    </h3>
+
+                    <p>
+                        Update church information and settings.
+                    </p>
+
+                </div>
+
+                <span class="quick-action-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         RECENT ACTIVITY
+    ========================================= -->
+
+    <section class="dashboard-bottom">
+
+
+        <div class="dashboard-info-card">
+
+            <div class="info-card-icon">
+                ♡
+            </div>
+
+            <div>
+
+                <span class="section-kicker">
+                    MINISTRY
+                </span>
+
+                <h3>
+                    Keep serving, keep reaching.
+                </h3>
+
+                <p>
+                    Use the dashboard to keep your
+                    online church community updated,
+                    connected and encouraged.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-info-card">
+
+            <div class="info-card-icon">
+                ✦
+            </div>
+
+            <div>
+
+                <span class="section-kicker">
+                    WEBSITE
+                </span>
+
+                <h3>
+                    Your website is live.
+                </h3>
+
+                <p>
+                    Visit the public website to see
+                    how your latest updates appear
+                    to visitors.
+                </p>
+
+                <a
+                    href="../index.html"
+                    class="text-link">
+
+                    Open Website →
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+</div>
+
+
+
+<!-- =========================================
+     FIREBASE
+========================================= -->
+
+<script type="module">
+
+import { db }
+from "../js/firebase-config.js";
+
+
+import {
+    collection,
+    getCountFromServer,
+    query,
+    where
 }
-document.addEventListener("tcpAdminReady",()=>{
- count("announcements","announcementCount");
- count("programs","programCount");
- count("prayerRequests","prayerCount");
- count("testimonies","testimonyCount",where("approved","==",false));
- count("visitRequests","visitCount");
-});
+from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+
+import {
+    requireAdmin,
+    logoutAdmin
+}
+from "../js/admin-auth.js";
+
+
+requireAdmin();
+
+
+document.getElementById("logoutBtn").onclick =
+    logoutAdmin;
+
+
+document.getElementById("mobileMenu").onclick =
+    () => {
+
+        document
+            .getElementById("sidebar")
+            .classList.toggle("open");
+
+    };
+
+
+
+async function count(path, element, q = null) {
+
+    try {
+
+        const ref =
+            q
+                ? query(
+                    collection(db, path),
+                    q
+                )
+                : collection(db, path);
+
+
+        const snap =
+            await getCountFromServer(ref);
+
+
+        document
+            .getElementById(element)
+            .textContent =
+            snap.data().count;
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Count failed:",
+            path,
+            error
+        );
+
+        document
+            .getElementById(element)
+            .textContent = "0";
+
+    }
+
+}
+
+
+
+document.addEventListener(
+    "tcpAdminReady",
+    () => {
+
+        count(
+            "announcements",
+            "announcementCount"
+        );
+
+
+        count(
+            "programs",
+            "programCount"
+        );
+
+
+        count(
+            "prayerRequests",
+            "prayerCount"
+        );
+
+
+        count(
+            "testimonies",
+            "testimonyCount",
+            where(
+                "approved",
+                "==",
+                false
+            )
+        );
+
+
+        count(
+            "visitRequests",
+            "visitCount"
+        );
+
+    }
+);
+
 </script>
-</body></html>
+
+</body>
+</html>
+```
